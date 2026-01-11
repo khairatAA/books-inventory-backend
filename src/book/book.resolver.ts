@@ -1,25 +1,31 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
 import { Book } from './book.entity';
 import { BooksService } from './book.service';
+import { GqlAuthGuard } from '../auth/jwt.guard';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
 
-@Resolver(() => Book) // Tells GraphQL that this resolver is for the Book type
+@Resolver(() => Book)
 export class BooksResolver {
   constructor(private readonly booksService: BooksService) {}
 
   /**
-   * GraphQL query to get all books
-   * Returns an array of Book objects
+   * Query: Get all books
+   * Protected by JWT: any authenticated user can access
    */
   @Query(() => [Book], { description: 'Get all books' })
+  @UseGuards(GqlAuthGuard)
   books(): Promise<Book[]> {
     return this.booksService.findAll();
   }
 
   /**
-   * GraphQL query to get a single book by ID
-   * Returns Book object or null if not found
+   * Query: Get a single book by ID
+   * Protected by JWT: any authenticated user can access
    */
   @Query(() => Book, { nullable: true, description: 'Get a single book by ID' })
+  @UseGuards(GqlAuthGuard)
   book(
     @Args('id', { type: () => Int, description: 'ID of the book' }) id: number,
   ): Promise<Book | null> {
@@ -27,11 +33,11 @@ export class BooksResolver {
   }
 
   /**
-   * GraphQL mutation to create a new book
-   * Accepts name and description as arguments
-   * Returns the newly created Book object
+   * Mutation: Create a new book
+   * Protected by JWT: any authenticated user can create books
    */
   @Mutation(() => Book, { description: 'Create a new book' })
+  @UseGuards(GqlAuthGuard)
   createBook(
     @Args('name', { description: 'Name of the book' }) name: string,
     @Args('description', { description: 'Description of the book' })
@@ -41,12 +47,12 @@ export class BooksResolver {
   }
 
   /**
-   * GraphQL mutation to update an existing book
-   * Accepts ID and optional name/description
-   * Returns the updated Book object
-   * Throws NotFoundException if book does not exist
+   * Mutation: Update an existing book
+   * Protected by JWT + RolesGuard: only users with 'admin' role can update
    */
   @Mutation(() => Book, { description: 'Update an existing book' })
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Roles('admin')
   updateBook(
     @Args('id', { type: () => Int, description: 'ID of the book to update' })
     id: number,
@@ -62,10 +68,12 @@ export class BooksResolver {
   }
 
   /**
-   * GraphQL mutation to delete a book by ID
-   * Returns true if deletion was successful
+   * Mutation: Delete a book by ID
+   * Protected by JWT + RolesGuard: only users with 'admin' role can delete
    */
   @Mutation(() => Boolean, { description: 'Delete a book by ID' })
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Roles('admin')
   deleteBook(
     @Args('id', { type: () => Int, description: 'ID of the book to delete' })
     id: number,
