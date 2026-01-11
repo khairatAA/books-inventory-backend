@@ -4,7 +4,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { AppResolver } from './app.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BookModule } from './book/book.module';
+import { BooksModule } from './book/book.module';
 
 @Module({
   imports: [
@@ -19,7 +19,7 @@ import { BookModule } from './book/book.module';
       autoSchemaFile: join(process.cwd(), 'schema.gql'),
       playground: true,
     }),
-    BookModule,
+    BooksModule,
   ],
   providers: [AppResolver],
 })

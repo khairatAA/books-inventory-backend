@@ -2,6 +2,50 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Book {
+  id: Int!
+  name: String!
+  description: String!
+}
+
 type Query {
   healthCheck: String!
+
+  """Get all books"""
+  books: [Book!]!
+
+  """Get a single book by ID"""
+  book(
+    """ID of the book"""
+    id: Int!
+  ): Book
+}
+
+type Mutation {
+  """Create a new book"""
+  createBook(
+    """Name of the book"""
+    name: String!
+
+    """Description of the book"""
+    description: String!
+  ): Book!
+
+  """Update an existing book"""
+  updateBook(
+    """ID of the book to update"""
+    id: Int!
+
+    """New name of the book"""
+    name: String
+
+    """New description of the book"""
+    description: String
+  ): Book!
+
+  """Delete a book by ID"""
+  deleteBook(
+    """ID of the book to delete"""
+    id: Int!
+  ): Boolean!
 }
