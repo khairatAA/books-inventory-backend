@@ -1,3 +1,16 @@
+/**
+ * AppModule
+ *
+ * Root module of the NestJS application.
+ *
+ * Responsibilities:
+ * - Sets up TypeORM with SQLite and auto-loaded entities
+ * - Configures environment variables via ConfigModule
+ * - Configures GraphQL with Apollo driver and auto-generated schema
+ * - Imports feature modules: BooksModule and AuthModule
+ * - Registers global GraphQL resolvers (AppResolver)
+ */
+
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';

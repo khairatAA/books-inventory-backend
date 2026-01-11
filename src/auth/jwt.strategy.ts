@@ -1,3 +1,16 @@
+/**
+ * JwtStrategy
+ *
+ * Passport JWT strategy for validating Auth0-issued JSON Web Tokens (JWTs).
+ *
+ * - Uses jwks-rsa to fetch public keys from Auth0 for signature verification.
+ * - Configures audience and issuer based on environment variables.
+ * - Only accepts RS256-signed tokens.
+ *
+ * The `validate` method attaches a user object to request.user,
+ * including userId and roles.
+ */
+
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
