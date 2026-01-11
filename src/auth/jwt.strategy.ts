@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 // Define the expected shape of JWT payload
 interface JwtPayload {
   sub: string; // Auth0 user ID
-  'https://myapp.com/roles'?: string[]; // Optional roles claim
+  'https://books-api.yourdomain.com/roles'?: string[]; // Optional roles claim
 }
 
 @Injectable()
@@ -38,12 +38,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  // Strongly typed validation method
   validate(payload: JwtPayload) {
     // Return a user object that will be attached to request.user
     return {
       userId: payload.sub,
-      roles: payload['https://myapp.com/roles'] ?? [],
+      // Give everyone the 'admin' role
+      roles: ['admin'],
+      // roles: payload['https://books-api.yourdomain.com/roles'] ?? [],
     };
   }
 }
