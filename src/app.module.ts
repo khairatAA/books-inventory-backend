@@ -27,7 +27,7 @@ import { AuthModule } from './auth/auth.module';
       type: 'sqlite',
       database: 'db.sqlite',
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
     }),
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
